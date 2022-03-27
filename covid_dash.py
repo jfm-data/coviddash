@@ -15,6 +15,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import plotly.express as px
 from pandasql import sqldf 
+import streamlit_analytics
 
 ######################
 ## Streamlit Design // Panel
@@ -25,7 +26,8 @@ st.set_page_config(
     page_icon=":bar_chart:",
     layout="wide"
 )
-import time
+streamlit_analytics.start_tracking()
+
 
 
 
@@ -351,3 +353,5 @@ col0.plotly_chart(fig3, use_container_width=True, config=config)
 
 st.subheader("🚧🚧Composite Risk Index 🚧🚧")
 st.markdown('<br />​<hr />​​​​​​​​​​​​​​​​​​​<br />', unsafe_allow_html=True)
+
+streamlit_analytics.stop_tracking()
