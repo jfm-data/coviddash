@@ -15,8 +15,17 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import plotly.express as px
 from pandasql import sqldf 
-import streamlit_analytics
+try:
+    import streamlit_analytics
+except ImportError:
+    # Install streamlit-analytics on first run (not included in requirements.txt).
+    import subprocess
+    import sys
 
+    subprocess.check_call(
+        [sys.executable, "-m", "pip", "install", "streamlit_analytics"]
+    )
+    import streamlit_analytics
 ######################
 ## Streamlit Design // Panel
 #####################
