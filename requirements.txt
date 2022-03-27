@@ -9,3 +9,4 @@ streamlit==1.2.0
 seaborn==0.11.0
 numpy==1.19.2
 pandasql==0.7.3
+streamlit-analytics
