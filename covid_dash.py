@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-import altair as alt
 from requests import get
 import re
 import os
@@ -15,6 +14,8 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import plotly.express as px
 from pandasql import sqldf 
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import MinMaxScaler
 try:
     import streamlit_analytics
 except ImportError:
@@ -26,6 +27,8 @@ except ImportError:
         [sys.executable, "-m", "pip", "install", "streamlit_analytics"]
     )
     import streamlit_analytics
+    
+    
 ######################
 ## Streamlit Design // Panel
 #####################
@@ -36,9 +39,6 @@ st.set_page_config(
     layout="wide"
 )
 streamlit_analytics.start_tracking()
-
-
-
 
 ######################
 ## Case Data Import & Cleaning
@@ -80,7 +80,6 @@ case_df['Deaths Rolling Avg'] = case_df['Deaths'].rolling(10, min_periods=1).mea
 case_df = case_df[case_df['Reported Date']>'2020-04-18']
 
 
-
 cat_df = cat_df[[ 
        'Test_Reported_Date',  'Age_Group', 'Client_Gender',
         'Outcome1', 
@@ -92,9 +91,6 @@ cut_date = case_df['Reported Date'].tail(1) - datetime.timedelta(days=15)
 cat_df = cat_df[cat_df['Test_Reported_Date']>cut_date.to_string(index=False)]
 cat_df.rename(columns = {'Reporting_PHU_Latitude':'lat'}, inplace = True)
 cat_df.rename(columns = {'Reporting_PHU_Longitude':'lng'}, inplace = True)
-
-
-
 
 
 #st.write('Last Reporting Date: ' +'**'+case_df['Reported Date'].tail(1).dt.strftime("%B %d, %Y").to_string(index=False)+'**')
@@ -116,7 +112,6 @@ st.write('Joel McInnis Data Analyst Challenge')
 
 st.title('Ontario COVID-19 Dashboard')
 st.write('Last Reporting Date: ' +'**'+case_df['Reported Date'].tail(1).dt.strftime("%B %d, %Y").to_string(index=False)+'**')
-
 
 
 #######################
@@ -285,8 +280,6 @@ q1 = """SELECT outbreak_group, SUM(number_ongoing_outbreaks) As Cases
         FROM out_df
         GROUP BY outbreak_group """
 
-
-
 q1df = sqldf(q1)
 
 q1df.outbreak_group = q1df.outbreak_group.str.strip("123456")
@@ -330,11 +323,25 @@ Now the issue with this data, is we don't have the population of the workforce t
      """)
      
      
+#######################
+## Indicator Index
+#######################    
+
+#Adding feature for Case fatality rate
+case_df['CFR'] = case_df['Death_Count']/case_df['Confirmed Positive'].cumsum()
+scaler = StandardScaler()
+scale_df = case_df[20:]
+scale_df = pd.DataFrame(scaler.fit_transform(scale_df[['CFR','Percent positive tests in last day','Number of patients in ICU due to COVID-19']]),
+                 index=scale_df['Reported Date'], columns= ['CFR','Percent positive tests in last day','Number of patients in ICU due to COVID-19'])
+
+scaler2 = MinMaxScaler()
+index_value = (pd.DataFrame(scaler2.fit_transform(pd.DataFrame(scale_df.mean(axis=1))))*100).tail(1)
+index_value = int(x.values)
 
 
 fig3 = go.Figure(go.Indicator(
             mode = "gauge+number",
-            value = 33,
+            value = index_value,
             title = {'text': "Composite Index (placeholder)"},
             gauge = {'axis': {'range': [None, 100]},
                      'bar': {'color': "black"},
@@ -353,14 +360,13 @@ st.markdown('<br />​<hr />​​​​​​​​​​​​​​​​​�
 col0, col1 = st.columns(2)
 
 expdr = col1.expander('Details & Formula')
-expdr.write("""Ran out of time, however was going to normalize the values of ['Daily Positive Rate', 'Case Fatality Rate' (calucated metric), 'ICU Cases with COVID].            
-            I was trying to build a formula to represent the current status by weighing the measures on a scale of 0-100.\n\n            
-            To be respectful of time, I don't want to spend another hour tuning the formula that makes sense to me and relevant.
-            But with more time I think I could have constructed a value worth monitoring.""")
+expdr.write("""My intent here was derive a single index value metric as a guide for risk of COVID in Ontario. I choose 'Daily Positive Rate', 'Case Fatality Rate' (calucated metric), 
+            and 'ICU Cases with COVID' as my variables. Test positive rate represents the spread in the community, CFR represents the mortal threat to infection, and ICU numbers 
+            are a measure of pressure on the healtcare system. I first transformed the values to be on the same scale, then combined by the finding the mean value for each date.   
+            Then I used used a MinMax scaler and a multiplier to get the composite value on  measured on a scale of 0-100.\n\n            
+            I .""")
 
 col0.plotly_chart(fig3, use_container_width=True, config=config)
 
-st.subheader("🚧🚧Composite Risk Index 🚧🚧")
+st.subheader("Composite Risk Index")
 st.markdown('<br />​<hr />​​​​​​​​​​​​​​​​​​​<br />', unsafe_allow_html=True)
-
-streamlit_analytics.stop_tracking()
