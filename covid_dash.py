@@ -336,13 +336,13 @@ scale_df = pd.DataFrame(scaler.fit_transform(scale_df[['CFR','Percent positive t
 
 scaler2 = MinMaxScaler()
 index_value = (pd.DataFrame(scaler2.fit_transform(pd.DataFrame(scale_df.mean(axis=1))))*100).tail(1)
-index_value = int(x.values)
+index_value = int(index_value.values)
 
 
 fig3 = go.Figure(go.Indicator(
             mode = "gauge+number",
             value = index_value,
-            title = {'text': "Composite Index (placeholder)"},
+            title = {'text': "Composite Index"},
             gauge = {'axis': {'range': [None, 100]},
                      'bar': {'color': "black"},
                      'steps' : [
@@ -363,8 +363,8 @@ expdr = col1.expander('Details & Formula')
 expdr.write("""My intent here was derive a single index value metric as a guide for risk of COVID in Ontario. I choose 'Daily Positive Rate', 'Case Fatality Rate' (calucated metric), 
             and 'ICU Cases with COVID' as my variables. Test positive rate represents the spread in the community, CFR represents the mortal threat to infection, and ICU numbers 
             are a measure of pressure on the healtcare system. I first transformed the values to be on the same scale, then combined by the finding the mean value for each date.   
-            Then I used used a MinMax scaler and a multiplier to get the composite value on  measured on a scale of 0-100.\n\n            
-            I .""")
+            Then I used used a MinMax scaler and a multiplier to get the composite value on  measured on a scale of 0-100.         
+          """)
 
 col0.plotly_chart(fig3, use_container_width=True, config=config)
 
