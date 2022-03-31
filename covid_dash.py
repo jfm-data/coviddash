@@ -179,11 +179,14 @@ st.subheader('GTA COVID Case Heatmap')
 
 with st.expander("Explanation & Data Sources"):
      st.write("""
+        **Data Source**: https://data.ontario.ca/dataset/confirmed-positive-cases-of-covid-19-in-ontario
+        
+        
          The chart above is a heatmap of COVID-19 Cases in Ontario for the 15 days from the latest reporting date. The heatmap data comes from the Confirmed positive cases of COVID19 in Ontario file fetched from https://data.ontario.ca/ on load.
          The file size exceeded the system's parameters to handle all records (detailed individual case data is 150 MB+), so the data 
          was reduced by variables and date to a more manageable -- and meaningful -- 15-day period. The script reads the last date and yeilds the date from 15-day prior to subset the file.
 
-The heatmap is placed at the top because it is an efficiently digestible visual. The information is easily absorbed by the user and they get aboard understanding for the recent COVID spread in the GTA, where the TRU LUV offices are located.
+        The heatmap is placed at the top because it is an efficiently digestible visual. The information is easily absorbed by the user and they get aboard understanding for the recent COVID spread in the GTA, where the TRU LUV offices are located.
      """)
      st.image("https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/yt6im9kseccytscjrc3b")
 
@@ -261,6 +264,9 @@ st.subheader('COVID Cases & Deaths')
 
 with st.expander("See explanation"):
      st.write("""
+        **Data Source**: https://data.ontario.ca/dataset/status-of-covid-19-cases-in-ontario
+        
+        
          The chart above uses chronological data of daily covid cases and deaths throughout the pandemic. 
          The large differences in values required the use of two y-axises to demonstrate the interaction between the two metrics and their current trends. 
          There was some data munging required to calculate the death count because of a change in methodology and record keeping. Then the death data recording 
@@ -314,12 +320,12 @@ st.subheader('Ontario Outbreaks for the past 15-days')
 
 with st.expander("See explanation"):
      st.write("""
-         The bar chart above represents outbreaks of COVID cases by setting for the trailing 15-day period. There are four primary categories, including the workplace which could be a guiding principle to anser the question of "when can we return to the office?" 
+    **Data Source:** https://data.ontario.ca/dataset/ontario-covid-19-outbreaks-data 
+    
+    The bar chart above represents outbreaks of COVID cases by setting for the trailing 15-day period. There are four primary categories, including the workplace which could be a guiding principle to anser the question of "when can we return to the office?" 
 
-The data comes from the file Ongoing outbreaks on
- https://data.ontario.ca/. The data was subset for the 15-day period and aggregated by summing the value of cases by day per group.
-
-Now the issue with this data, is we don't have the population of the workforce that has returned to the office -- as this is not data tracked daily as these outbreaks are recorded.
+    The data comes from the file Ongoing outbreaks on https://data.ontario.ca/. The data was subset for the 15-day period and aggregated by summing the value of cases by day per group.
+    Now the issue with this data, is we don't have the population of the workforce that has returned to the office -- as this is not data tracked daily as these outbreaks are recorded.
      """)
      
      
