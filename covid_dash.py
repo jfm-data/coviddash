@@ -324,7 +324,7 @@ with st.expander("See explanation"):
     
     The bar chart above represents outbreaks of COVID cases by setting for the trailing 15-day period. There are four primary categories, including the workplace which could be a guiding principle to anser the question of "when can we return to the office?" 
 
-    The data subset for the last 15-days to make the outbreaks relevant. The data was aggregated by summing the value of cases by day per group and some data formatting was required.
+    The data subset for the last 15-days to make the outbreaks relevant. The data was aggregated by summing the value of cases by day per group using SQL syntax. The data required string formatting to clean up ordering.
     Now the issue with this data, is we don't have the population of the workforce that has returned to the office -- as this is not data tracked daily as these outbreaks are recorded.
      """)
      
