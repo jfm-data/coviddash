@@ -355,18 +355,43 @@ fig3.update_layout(width=500, height=500,
          margin={'l':0})
 
 st.markdown('<br />​<hr />​​​​​​​​​​​​​​​​​​​<br />', unsafe_allow_html=True)
+fig4 = px.line((pd.DataFrame(scaler2.fit_transform(pd.DataFrame(scale_df.mean(axis=1))), index=scale_df.index)*100))
 
 
+
+fig4.update_xaxes(color="#fff")
+fig4.update_yaxes(title_text="<b>Index Value</b>", linecolor="#fff")
+
+fig4.update_yaxes(color="#fff")
+fig4.update_layout(
+    title_text="Composite Index Time Series",
+     template="simple_white",
+     font_color="#fff",    
+    legend=dict(
+    yanchor="top",
+    y=0.99,
+    xanchor="right",
+    x=0.99,
+    font_color="#444"    
+))
+fig4.update_layout({
+'plot_bgcolor': 'rgba(33, 33, 33, .1)',
+'paper_bgcolor': 'rgba(33, 33, 33, 1)',
+
+
+})
 col0, col1 = st.columns(2)
 
-expdr = col1.expander('Details & Formula')
-expdr.write("""My intent here was derive a single index value metric as a guide for risk of COVID in Ontario. I choose 'Daily Positive Rate', 'Case Fatality Rate' (calucated metric), 
-            and 'ICU Cases with COVID' as my variables. Test positive rate represents the spread in the community, CFR represents the mortal threat to infection, and ICU numbers 
-            are a measure of pressure on the healtcare system. I first transformed the values to be on the same scale, then combined by the finding the mean value for each date.   
-            Then I used used a MinMax scaler and a multiplier to get the composite value on  measured on a scale of 0-100.         
-          """)
+
+col1.plotly_chart(fig4, use_container_width=True, config=config)
 
 col0.plotly_chart(fig3, use_container_width=True, config=config)
 
 st.subheader("Composite Risk Index")
+with st.expander('Details & Formula'):
+    st.write("""My intent here was derive a single index value metric as a guide for risk of COVID in Ontario. I choose 'Daily Positive Rate', 'Case Fatality Rate' (calucated metric), 
+                and 'ICU Cases with COVID' as my variables. Test positive rate represents the spread in the community, CFR represents the mortal threat to infection, and ICU numbers 
+                are a measure of pressure on the healtcare system. I first transformed the values to be on the same scale, then combined by the finding the mean value for each date.   
+                Then I used used a MinMax scaler and a multiplier to get the composite value on  measured on a scale of 0-100.\n\n            
+                I .""")
 st.markdown('<br />​<hr />​​​​​​​​​​​​​​​​​​​<br />', unsafe_allow_html=True)
