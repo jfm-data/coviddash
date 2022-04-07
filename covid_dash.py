@@ -280,52 +280,48 @@ with st.expander("See explanation"):
 ## Bar Chart Outbreak
 #######################
 out_df = get_data(outbreak_url, [1])
-out_df = out_df[out_df['date']>cut_date.to_string(index=False)]
+q3df = pd.read_csv('https://data.ontario.ca/datastore/dump/66d15cce-bfee-4f91-9e6e-0ea79ec52b3d?bom=True', parse_dates=[1])
+q3df.outbreak_group = q3df.outbreak_group.str.strip("123456")
+q3df["month"]= q3df.date.dt.to_period('M')
+df1 = q3df.groupby(by=['month','outbreak_group'], as_index=False).sum().drop('_id',axis=1)
+df1['month'] = df1.month.dt.strftime("%B %Y")
+fig6 = px.bar(df1, 
+            x="outbreak_group",
+            y="number_ongoing_outbreaks", color="outbreak_group",
+            animation_frame="month",
+            animation_group="outbreak_group")
 
-q1 = """SELECT outbreak_group, SUM(number_ongoing_outbreaks) As Cases 
-        FROM out_df
-        GROUP BY outbreak_group """
+fig6.update_xaxes(color="#fff")
 
-q1df = sqldf(q1)
 
-q1df.outbreak_group = q1df.outbreak_group.str.strip("123456")
-#color_discrete_map = {'MALE': '#71fcf7', 'FEMALE':'#b444f4'}
-fig2 = px.bar(q1df, x='outbreak_group', y='Cases', color='Cases')
 
-fig2.update_xaxes(color="#fff")
-fig2.update_yaxes(title_text="<b>Confirmed Cases</b>", linecolor="#fff")
+fig6.update_xaxes(color="#fff")
+fig6.update_yaxes(title_text="<b>Confirmed Cases</b>", linecolor="#fff")
 
-fig2.update_yaxes(color="#fff")
-fig2.update_layout(
+fig6.update_yaxes(color="#fff")
+fig6.update_layout(
     title_text="Outbreaks by Environments",
      template="simple_white",
      font_color="#fff",    
-    legend=dict(
-    yanchor="top",
-    y=0.99,
-    xanchor="right",
-    x=0.99,
-    font_color="#444"    
-))
-
-fig2.update_layout({
+  )
+fig6.update_layout({
 'plot_bgcolor': 'rgba(33, 33, 33, .1)',
 'paper_bgcolor': 'rgba(33, 33, 33, 1)',
-'legend_bgcolor': 'rgba(245, 245, 245, 1)'
+
 
 })
 
-st.plotly_chart(fig2, use_container_width=True, config=config)
-st.subheader('Ontario Outbreaks for the past 15-days')
+st.plotly_chart(fig6, use_container_width=True, config=config)
+st.subheader('Ontario Outbreaks')
 
 with st.expander("See explanation"):
      st.write("""
     **Data Source:** https://data.ontario.ca/dataset/ontario-covid-19-outbreaks-data 
     
-    The bar chart above represents outbreaks of COVID cases by setting for the trailing 15-day period. There are four primary categories, including the workplace which could be a guiding principle to anser the question of "when can we return to the office?" 
+    The bar chart above represents outbreaks of COVID cases by setting. There are six primary categories, including the workplace which could be a guiding principle to anser the question of "when can we return to the office?" 
 
-    The data subset for the last 15-days to make the outbreaks relevant. The data was aggregated by summing the value of cases by day per group using SQL syntax. The data required string formatting to clean up ordering.
-    Now the issue with this data, is we don't have the population of the workforce that has returned to the office -- as this is not data tracked daily as these outbreaks are recorded.
+    The data is aggregated for each month -- play the animation to see the movement or select month/year. The data was aggregated by summing the value of cases by day per group using SQL syntax. The data required string formatting to clean up ordering.
+    Now the issue with this data, is we don't have the population of the workforce that has returned to the office. It gives a good sense of where these outbreaks are occuring.
      """)
      
      
