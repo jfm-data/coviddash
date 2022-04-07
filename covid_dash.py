@@ -40,6 +40,8 @@ st.set_page_config(
 )
 streamlit_analytics.start_tracking()
 
+st.markdown('<head> <script async="" src="//static.getclicky.com/101350331.js"></script> </head>', unsafe_allow_html=True)
+
 ######################
 ## Case Data Import & Cleaning
 #####################
