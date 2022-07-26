@@ -96,7 +96,7 @@ cat_df.rename(columns = {'Reporting_PHU_Longitude':'lng'}, inplace = True)
 
 
 #st.write('Last Reporting Date: ' +'**'+case_df['Reported Date'].tail(1).dt.strftime("%B %d, %Y").to_string(index=False)+'**')
-st.write('Joel McInnis Data Analyst Challenge')
+st.write('JF COVID Dashboard Test')
 
 # cat_df = cat_df[['Row_ID', 
 #        'Test_Reported_Date',  'Age_Group', 'Client_Gender',
